@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Traffic Flow Predictor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <!-- Header -->
+    <nav class="navbar navbar-dark bg-primary">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0 h1">🚦 Traffic Flow Predictor</span>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-4">
+        {% if error %}
+            <div class="alert alert-danger">{{ error }}</div>
+        {% endif %}
+
+        <form method="POST" action="/predict" class="card p-4 shadow-sm">
+            <div class="mb-3">
+                <label for="junction" class="form-label">Junction</label>
+                <input type="number" name="junction" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="date_time" class="form-label">Date & Time</label>
+                <input type="datetime-local" name="date_time" class="form-control" required>
+            </div>
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-success">Predict</button>
+                <a href="/graph" class="btn btn-outline-primary">📊 Show Prediction Graph</a>
+                <a href="/map" class="btn btn-outline-secondary">🗺️ View Junction Map</a>
+                <a href="/download_latest" class="btn btn-outline-dark">⬇ Download Last Report (JSON)</a>
+            </div>
+        </form>
+
+        {% if result %}
+            <div class="alert alert-info mt-3">
+                🚗 Predicted Vehicle Count: <strong>{{ result }}</strong>
+            </div>
+        {% endif %}
+
+        {% if graph_url %}
+            <div class="text-center mt-4">
+                <img src="{{ url_for('static', filename='prediction_graph.png') }}" class="img-fluid" style="max-height: 400px;">
+            </div>
+        {% endif %}
+
+        {% if show_map %}
+            <div class="mt-5" id="map" style="height: 400px;"></div>
+        {% endif %}
+
+        {% if history %}
+            <h4 class="mt-5">🧾 Prediction History</h4>
+            <table class="table table-bordered table-striped mt-2">
+                <thead>
+                    <tr>
+                        <th>Date & Time</th>
+                        <th>Junction</th>
+                        <th>Predicted Vehicles</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entry in history %}
+                        <tr>
+                            <td>{{ entry.timestamp }}</td>
+                            <td>{{ entry.junction }}</td>
+                            <td>{{ entry.predicted_vehicles }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer mt-5 py-4 bg-light text-center">
+        <p>Made with ❤️ for smarter traffic systems</p>
+        <div>
+            <a href="#" class="me-3"><img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" width="24"></a>
+            <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/1384/1384015.png" width="24"></a>
+        </div>
+    </footer>
+
+    {% if show_map %}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        const map = L.map('map').setView([28.6139, 77.2090], 12);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a>'
+        }).addTo(map);
+
+        const junctions = [
+            { name: "Junction 1", lat: 28.6139, lon: 77.2090 },
+            { name: "Junction 2", lat: 28.6200, lon: 77.2150 },
+            { name: "Junction 3", lat: 28.6050, lon: 77.2000 },
+            { name: "Junction 4", lat: 28.6180, lon: 77.2200 }
+        ];
+
+        junctions.forEach(j => {
+            L.marker([j.lat, j.lon]).addTo(map)
+                .bindPopup(`<b>${j.name}</b>`);
+        });
+    </script>
+    {% endif %}
+</body>
+</html>

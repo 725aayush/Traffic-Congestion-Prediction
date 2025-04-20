@@ -1,0 +1,12 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #f0f2f5;
+}
+.footer img {
+    filter: grayscale(1);
+    transition: 0.3s;
+}
+.footer img:hover {
+    filter: none;
+    transform: scale(1.1);
+}
