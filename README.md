@@ -17,3 +17,28 @@ A Machine Learning-powered web application that predicts vehicle traffic congest
 
 ## 📁 Project Structure
 
+
+---
+
+## 🧠 Technologies Used
+
+| Layer        | Tools/Frameworks                                      |
+|--------------|--------------------------------------------------------|
+| Backend      | Python, Flask                                          |
+| Machine Learning | scikit-learn (Random Forest Regressor)           |
+| Frontend     | HTML, CSS, JavaScript, Bootstrap                      |
+| Visualization| Chart.js, Matplotlib, Leaflet.js                      |
+| Data Format  | JSON (for report downloads)                           |
+| Optional DB  | SQLite (for persistent history - optional)            |
+
+---
+
+## ⚙️ Installation & Running Locally
+
+Follow the steps below to get the app running on your local system:
+
+### 🔹 1. Clone the Repository
+
+```bash
+git clone https://github.com/725aayush/Traffic-Congestion-Prediction.git
+cd Traffic-Congestion-Prediction
